@@ -1,0 +1,11 @@
+*.pyc
+*.pyo
+*.DS_Store
+*.log
+_build
+Thumbs.db
+/*.egg-info/
+/build/
+/dist/
+/.idea/
+/.venv/
