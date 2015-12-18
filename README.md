@@ -22,7 +22,7 @@ class GzipFile(E.File):
 
 # Extract objects are meant to be chained:
 
-class LineSplitter(E.Base):
+class SplitLines(E.Base):
     def extract(self, fp):
         for line in fp:
             yield line
@@ -64,7 +64,7 @@ class PrettyPrint(L.Base):
 
 ```python
 pipeline = GzipFile('users_login_time.gz') | \
-    LineSplitter() | \
+    SplitLines() | \
     JSON() | \
     Greeter('login') | \
     PrettyPrint() | \
