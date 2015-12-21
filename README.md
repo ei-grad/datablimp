@@ -38,7 +38,7 @@ class JSON(E.Base):
         # (doc.__getitem__/__setitem__ are proxied to the doc.data,
         # and doc.meta is used to store internal info)
 
-        yield E.Doc(json.loads(line))
+        yield E.Doc(json.loads(data))
 
 
 
