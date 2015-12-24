@@ -11,6 +11,8 @@ EVENTS = [json.loads(i) for i in JSONL.splitlines()]
 
 
 def parse_dt(doc):
+    doc = dict(doc)
     doc['time'] = datetime.utcfromtimestamp(doc['time'])
+    return doc
 
 EVENTS_DT = [parse_dt(i) for i in EVENTS]

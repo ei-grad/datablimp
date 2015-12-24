@@ -6,7 +6,7 @@ from .sample import JSONL, EVENTS
 
 
 @pytest.mark.asyncio
-async def test_jsonl():
+async def test_jsonl_file():
     output = []
     pipeline = E.StringBuffer() | E.SplitLines() | E.JSON() | L.AppendTo(output)
     await pipeline.run(JSONL)
@@ -14,7 +14,7 @@ async def test_jsonl():
 
 
 @pytest.mark.asyncio
-async def test_jsonl_2():
+async def test_jsonl_str():
     output = []
     pipeline = E.SplitLines() | E.JSON() | L.AppendTo(output)
     await pipeline.run(JSONL)

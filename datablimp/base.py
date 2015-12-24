@@ -24,21 +24,7 @@ class Base(object):
             self._process = self._process_return
 
     def __or__(self, other):
-        self._consumers.append(other)
-        return self
-
-    async def run(self, initial, loop=None):
-
-        if loop is None:
-            loop = asyncio.get_event_loop()
-
-        if not isinstance(initial, list):
-            initial = [initial]
-
-        await asyncio.gather(*[
-            loop.create_task(self._process(i, loop))
-            for i in initial
-        ])
+        return Pipeline([self, other])
 
     async def _process_return(self, data, loop):
         result = self.process(data)
@@ -78,3 +64,38 @@ class Base(object):
 
         await self.process(data, emit)
         await asyncio.gather(*tasks)
+
+    def __repr__(self):
+        return self.__class__.__name__
+
+
+class Pipeline(object):
+
+    def __init__(self, chain):
+
+        self.chain = chain
+
+        for a, b in zip(chain[:-1], chain[1:]):
+            if b not in a._consumers:
+                a._consumers.append(b)
+
+        self._process = self.chain[0]._process
+
+    async def run(self, initial, loop=None):
+
+        if loop is None:
+            loop = asyncio.get_event_loop()
+
+        if not isinstance(initial, list):
+            initial = [initial]
+
+        await asyncio.gather(*[
+            loop.create_task(self._process(i, loop))
+            for i in initial
+        ])
+
+    def __or__(self, other):
+        return Pipeline(self.chain + [other])
+
+    def __repr__(self):
+        return 'Pipeline(%s)' % '|'.join(repr(i) for i in self.chain)

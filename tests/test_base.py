@@ -4,26 +4,49 @@ from datablimp.base import Base
 
 
 class Echo(Base):
+
+    def __init__(self, value):
+        super().__init__()
+        self.value = value
+        self.incoming = []
+
     def process(self, data):
-        return data
+        self.incoming.append(data)
+        return self.value
 
 
-def test_chain():
-    p1 = Echo()
-    p2 = Echo()
-    p3 = Echo()
-    p4 = Echo()
-    p5 = Echo()
-    p1 | p2 | p3 | p4 | p5
-    assert p1._consumers == [p2]
-    assert p2._consumers == [p3]
-    assert p3._consumers == [p4]
-    assert p4._consumers == [p5]
+@pytest.mark.asyncio
+async def test_chain():
+
+    e1 = Echo(1)
+    e2 = Echo(2)
+    e3 = Echo(3)
+    e4 = Echo(4)
+    e5 = Echo(5)
+
+    await (e1 | e2 | e3 | e4 | e5).run(0)
+
+    assert e1.incoming == [0]
+    assert e2.incoming == [1]
+    assert e3.incoming == [2]
+    assert e4.incoming == [3]
+    assert e5.incoming == [4]
 
 
 @pytest.mark.asyncio
 async def test_single_initial():
-    await Echo().run('test')
+    e1 = Echo(1)
+    e2 = Echo(2)
+    await (e1 | e2).run('test')
+    assert e1.incoming == ['test']
+
+
+@pytest.mark.asyncio
+async def test_list_initial():
+    e1 = Echo(1)
+    e2 = Echo(2)
+    await (e1 | e2).run(['test'])
+    assert e1.incoming == ['test']
 
 
 async def _test_passthrough(Producer):
