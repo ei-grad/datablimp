@@ -1,6 +1,9 @@
 machine:
   python:
     version: 3.5.0
+general:
+  artifacts:
+    - htmlcov
 test:
   override:
-    - py.test -v --cov-report html --cov-report term --cov datablimp tests
+    - py.test -v --cov-report html --cov-report term --cov datablimp --junit-xml $CIRCLE_TEST_REPORTS/junit/datablimp.xml tests
