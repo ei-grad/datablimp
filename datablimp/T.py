@@ -2,4 +2,4 @@ from datablimp.base import Base
 
 
 class Base(Base):
-    pass
+    _process_method_name = 'tranform'

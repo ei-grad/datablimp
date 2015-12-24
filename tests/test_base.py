@@ -8,11 +8,17 @@ class Echo(Base):
         return data
 
 
-def test_or():
-    p = Echo()
+def test_chain():
+    p1 = Echo()
     p2 = Echo()
-    assert (p | p2) is p
-    assert p2 in p._consumers
+    p3 = Echo()
+    p4 = Echo()
+    p5 = Echo()
+    p1 | p2 | p3 | p4 | p5
+    assert p1._consumers == [p2]
+    assert p2._consumers == [p3]
+    assert p3._consumers == [p4]
+    assert p4._consumers == [p5]
 
 
 @pytest.mark.asyncio

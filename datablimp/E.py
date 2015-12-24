@@ -18,8 +18,7 @@ class Doc(dict):
 
 
 class Base(Base):
-    def process(self, data):
-        return self.extract(data)
+    _process_method_name = 'extract'
 
 
 class GzipFile(Base):
@@ -29,6 +28,8 @@ class GzipFile(Base):
 
 class SplitLines(Base):
     def extract(self, fp):
+        if isinstance(fp, str):
+            fp = StringIO(fp)
         for line in fp:
             yield line
 
