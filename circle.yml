@@ -3,4 +3,4 @@ machine:
     version: 3.5.0
 test:
   override:
-    - py.test --cov-report html --cov-report term --cov datablimp tests
+    - py.test -v --cov-report html --cov-report term --cov datablimp tests
