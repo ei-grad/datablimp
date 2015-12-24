@@ -11,3 +11,6 @@ Thumbs.db
 /.venv/
 *~
 *.swp
+.cache
+.coverage
+/htmlcov/

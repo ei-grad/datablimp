@@ -1,0 +1,7 @@
+sqlalchemy
+geoalchemy2
+psycopg2
+pytest
+pytest-asyncio
+pytest-cov
+mock

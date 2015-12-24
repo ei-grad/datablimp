@@ -26,6 +26,4 @@ setup(
     install_requires=[
 
     ],
-
-    test_suite='datablimp'
 )
