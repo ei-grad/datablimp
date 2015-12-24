@@ -24,7 +24,11 @@ async def test_chain():
     e4 = Echo(4)
     e5 = Echo(5)
 
-    await (e1 | e2 | e3 | e4 | e5).run(0)
+    p = e1 | e2 | e3 | e4 | e5
+
+    assert repr(p) == 'Pipeline(Echo|Echo|Echo|Echo|Echo)'
+
+    await p.run(0)
 
     assert e1.incoming == [0]
     assert e2.incoming == [1]
