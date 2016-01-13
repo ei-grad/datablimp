@@ -91,16 +91,6 @@ async def test_emit_passthrough():
 
 
 @pytest.mark.asyncio
-async def test_process_method_name_passthrough():
-    class Extractor(Base):
-        _process_method_name = 'extract'
-
-        def extract(self, data):
-            return data
-    await _test_passthrough(Extractor)
-
-
-@pytest.mark.asyncio
 async def test_return_yield_passthrough():
     class Producer(Base):
         def process(self, data):

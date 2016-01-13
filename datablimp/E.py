@@ -1,5 +1,6 @@
 from copy import deepcopy
 from io import StringIO
+import asyncio
 import json
 
 from datablimp.base import Base
@@ -18,7 +19,11 @@ class Doc(dict):
 
 
 class Base(Base):
-    _process_method_name = 'extract'
+    async def process(self, data, emit):
+        result = self.extract(data)
+        if asyncio.iscoroutine(result):
+            await result
+        emit(data)
 
 
 class GzipFile(Base):

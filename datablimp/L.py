@@ -1,8 +1,14 @@
+import asyncio
+
 from datablimp.base import Base
 
 
 class Base(Base):
-    _process_method_name = 'load'
+    async def process(self, doc, emit):
+        result = self.load(doc)
+        if asyncio.iscoroutine(result):
+            await result
+        emit(doc)
 
 
 class AppendTo(Base):

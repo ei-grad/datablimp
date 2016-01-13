@@ -20,7 +20,7 @@ class GzipFile(E.File):
         yield gzip.GzipFile(filename)
 
 
-# Extract objects are meant to be chained:
+# Extractor objects are meant to be chained:
 
 class SplitLines(E.Base):
     def extract(self, fp):

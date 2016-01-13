@@ -1,6 +1,6 @@
 import os
 
-from datablimp import E, T, L
+from datablimp import E, T, L, Geo
 
 import sqlalchemy as sa
 
@@ -56,7 +56,7 @@ class TestPostGISPipeline(PgMixin, PipelineTest):
             E.SplitLines() |
             E.JSON() |
             T.ParseTimestamp('time') |
-            T.GeoPointWKT('geom') |
+            Geo.PointWKT('geom') |
             L.PostgreSQL(POSTGRES).Table('TestPostGISPipeline')
         )
 

@@ -1,5 +1,22 @@
+from datetime import datetime
+import pytz
+
 from datablimp.base import Base
 
 
 class Base(Base):
-    _process_method_name = 'tranform'
+    def process(self, data):
+        self.transform(data)
+        return data
+
+
+class ParseTimestamp(Base):
+
+    def __init__(self, source='time', target='time', timezone='UTC'):
+        super().__init__()
+        self.source = source
+        self.target = target
+        self.timezone = pytz.timezone(timezone)
+
+    def transform(self, doc):
+        doc[self.target] = self.timezone.localize(datetime.fromtimestamp(doc[self.source]))
