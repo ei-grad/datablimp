@@ -1,9 +1,10 @@
-dateutil
 geoalchemy2
+ipdb
 mock
 psycopg2
 pytest
 pytest-asyncio
 pytest-cov
+python-dateutil
 pytz
 sqlalchemy
