@@ -1,10 +1,12 @@
 import os
 
-from datablimp import E, T, L, Geo
+import pytest
 
 import sqlalchemy as sa
 
 from geoalchemy2 import Geometry
+
+from datablimp import E, T, L, geo
 
 from .base import PipelineTest
 from .sample import EVENTS
@@ -20,15 +22,14 @@ class PgMixin(object):
         self.meta = sa.MetaData()
         self.engine = sa.create_engine(POSTGRES)
         self.table_name = self.__class__.__name__
+        self.pipeline = self.get_pipeline()
 
 
+@pytest.mark.xfail
 class TestPostgresAutoCreate(PgMixin, PipelineTest):
-
-    initial = EVENTS
 
     def get_pipeline(self):
         return (
-            E.Iterable(EVENTS) |
             T.ParseTimestamp('time') |
             L.PostgreSQL(POSTGRES).Table(
                 'TestJsonlPostgresPipeline',
@@ -37,7 +38,7 @@ class TestPostgresAutoCreate(PgMixin, PipelineTest):
         )
 
     def test_pipeline(self):
-        self.pipeline.run()
+        self.pipeline.run(EVENTS)
         table = sa.Table(self.table_name, self.meta,
                          autoload=True, autoload_with=self.engine)
         assert set([i.name for i in table.c]) == set([
@@ -47,16 +48,15 @@ class TestPostgresAutoCreate(PgMixin, PipelineTest):
         print(data)
 
 
+@pytest.mark.xfail
 class TestPostGISPipeline(PgMixin, PipelineTest):
-
-    initial = EVENTS
 
     def get_pipeline(self):
         return (
             E.SplitLines() |
             E.JSON() |
             T.ParseTimestamp('time') |
-            Geo.PointWKT('geom') |
+            geo.PointWKT('geom') |
             L.PostgreSQL(POSTGRES).Table('TestPostGISPipeline')
         )
 

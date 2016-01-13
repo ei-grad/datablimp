@@ -7,9 +7,14 @@ from uuid import uuid4
 
 class Base(object):
 
+    process_method_name = None
+
     def __init__(self):
         self._uuid = uuid4()
         self._consumers = []
+
+        if self.process_method_name is not None:
+            self.process = getattr(self, self.process_method_name)
 
         if asyncio.iscoroutinefunction(self.process):
             self._process = self._process_emit
@@ -26,51 +31,54 @@ class Base(object):
         result = self.process(data)
 
         if isinstance(result, GeneratorType):
-            await self._process_yield(result, loop)
+            tasks = [
+                loop.create_task(consumer._process(i, loop))
+                for i in result
+                for consumer in self._consumers
+            ]
         elif asyncio.iscoroutine(result):
             result = await result
-            await asyncio.gather(*[
+            tasks = [
                 loop.create_task(consumer._process(result, loop))
                 for consumer in self._consumers
-            ])
+            ]
         else:
-            if result is not None:
-                result = data
-            await asyncio.gather(*[
+            # XXX: should unchanged input to be forwarded to next item in
+            # pipeline?
+            #
+            #     if result is None:
+            #         result = data
+            tasks = [
                 loop.create_task(consumer._process(result, loop))
                 for consumer in self._consumers
-            ], loop=loop)
+            ]
+
+        await asyncio.gather(*tasks, loop=loop)
 
     async def _process_yield(self, data, loop):
-        await asyncio.gather(*[
+        tasks = [
             loop.create_task(consumer._process(i, loop))
             for i in self.process(data)
             for consumer in self._consumers
-        ], loop=loop)
+        ]
+        await asyncio.gather(*tasks, loop=loop)
 
     async def _process_emit(self, data, loop):
-        emitter = Emitter(loop)
-        await self.process(data, emitter)
-        await emitter
+
+        tasks = []
+
+        def emit(data):
+            for consumer in self._consumers:
+                tasks.append(loop.create_task(
+                    consumer._process(data, loop)
+                ))
+
+        await self.process(data, emit)
+
+        await asyncio.gather(*tasks, loop=loop)
 
     def __repr__(self):
         return self.__class__.__name__
-
-
-class Emitter():
-
-    def __init__(self, loop):
-        self.loop = loop
-        self.tasks = []
-
-    def __call__(self, data):
-        for consumer in self._consumers:
-            self.tasks.append(self.loop.create_task(
-                consumer._process(data, self.loop)
-            ))
-
-    def __await__(self):
-        return asyncio.gather(*self.tasks)
 
 
 class Pipeline(object):
