@@ -1,6 +1,8 @@
 Datablimp
 =========
 
+[![Circle CI](https://circleci.com/gh/ei-grad/datablimp/tree/devel.svg?style=svg)](https://circleci.com/gh/ei-grad/datablimp/tree/devel)
+
 Datablimp is planned to be an ETL framework with bolder approach.
 
 * **Extensible:**
