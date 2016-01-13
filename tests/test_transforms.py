@@ -6,4 +6,4 @@ def test_parsetimestamp():
         'time': 1451463349.25179
     }
     T.ParseTimestamp().transform(doc)
-    assert doc['time'].isoformat() == '2015-12-30T08:15:49.25179+00:00'
+    assert doc['time'].isoformat() == '2015-12-30T08:15:49.251790+00:00'
