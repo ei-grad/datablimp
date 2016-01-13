@@ -1,7 +1,9 @@
-sqlalchemy
+dateutil
 geoalchemy2
+mock
 psycopg2
 pytest
 pytest-asyncio
 pytest-cov
-mock
+pytz
+sqlalchemy

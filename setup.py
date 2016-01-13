@@ -24,6 +24,8 @@ setup(
     ],
 
     install_requires=[
-
+        'dateutil',
+        'pytz',
+        'sqlalchemy',
     ],
 )
