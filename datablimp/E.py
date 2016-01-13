@@ -1,5 +1,6 @@
 from copy import deepcopy
 from io import StringIO
+import gzip
 import json
 
 from datablimp.base import Base
@@ -22,8 +23,11 @@ class Base(Base):
 
 
 class GzipFile(Base):
-    def extract(self, filename):
-        yield GzipFile(filename, *self.args, **self.kwargs)
+    def extract(self, file):
+        if isinstance(file, str):
+            return gzip.GzipFile(file)
+        else:
+            return gzip.GzipFile(fileobj=file)
 
 
 class SplitLines(Base):
