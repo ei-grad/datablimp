@@ -19,4 +19,4 @@ class ParseTimestamp(Base):
         self.timezone = pytz.timezone(timezone)
 
     def transform(self, doc):
-        doc[self.target] = self.timezone.localize(datetime.fromtimestamp(doc[self.source]))
+        doc[self.target] = self.timezone.localize(datetime.utcfromtimestamp(doc[self.source]))
