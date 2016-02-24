@@ -5,7 +5,6 @@ Datablimp
 
 Datablimp is planned to be an ETL framework with bolder approach.
 
-* **Extensible:**
 
 ```python
 import json
@@ -43,7 +42,6 @@ class JSON(E.Base):
         yield E.Doc(json.loads(data))
 
 
-
 # Transform objects just transform documents inplace:
 
 class Greeter(T.Base):
@@ -62,8 +60,6 @@ class PrettyPrint(L.Base):
 ```
 
 
-* **Expressive:**
-
 ```python
 pipeline = GzipFile('users_login_time.gz') | \
     SplitLines() | \
@@ -73,7 +69,6 @@ pipeline = GzipFile('users_login_time.gz') | \
     L.PostgreSQL('postgresql:///greets').Table('greets')
 ```
 
-* **Powerful:**
 
 ```python
 from datablimp import D  # dispatch
@@ -125,8 +120,6 @@ pipeline = postgres_source | event_transform | type_dispatcher | debug_logger
 ```
 
 
-* Made with **perfomance** in mind:
-
 ```python
 if __name__ == "__main__":
     import asyncio
@@ -135,7 +128,11 @@ if __name__ == "__main__":
 ```
 
 
-* And more:
+```bash
+datablimp "E.ApacheCombined | T.HTTPStats | L.Graphite" access.log
+datablimp "E.ApacheErrorLog | L.Elasticsearch" access.log
+```
+
 
 ```python
 from datablimp import W  # watchers
@@ -163,4 +160,3 @@ E.AMQP().Queue('fast-rabbit') | \
     L.Elasticsearch().Index('slow-elastic')
 ```
 
-What can you do with it?
