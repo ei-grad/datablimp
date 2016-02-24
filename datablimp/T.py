@@ -12,7 +12,7 @@ class Base(Base):
 
 class ParseTimestamp(Base):
 
-    def __init__(self, source='time', target='time', timezone='UTC'):
+    def __init__(self, source='timestamp', target='timestamp', timezone='UTC'):
         super().__init__()
         self.source = source
         self.target = target

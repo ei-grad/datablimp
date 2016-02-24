@@ -5,7 +5,7 @@ from datablimp.base import Base
 
 class Echo(Base):
 
-    def __init__(self, value):
+    def __init__(self, value=None):
         super().__init__()
         self.value = value
         self.incoming = []
@@ -35,6 +35,21 @@ async def test_chain():
     assert e3.incoming == [2]
     assert e4.incoming == [3]
     assert e5.incoming == [4]
+
+
+@pytest.mark.asyncio
+async def test_class_chain():
+
+    async def test(p):
+        e = Echo()
+        p = p | e
+        assert repr(p) == 'Pipeline(Echo|Echo|Echo)'
+        await p.run(object())
+        assert e.incoming == [None]
+
+    await test(Echo | Echo())
+    await test(Echo() | Echo)
+    await test(Echo | Echo)
 
 
 @pytest.mark.asyncio

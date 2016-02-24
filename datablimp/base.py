@@ -7,7 +7,9 @@ from uuid import uuid4
 
 class base_meta(type):
     def __or__(cls, other):
-        return Pipeline([cls(), other()])
+        if isinstance(other, base_meta):
+            other = other()
+        return Pipeline([cls(), other])
 
 
 class Base(metaclass=base_meta):
@@ -29,6 +31,8 @@ class Base(metaclass=base_meta):
             self._process = self._process_return
 
     def __or__(self, other):
+        if isinstance(other, base_meta):
+            other = other()
         return Pipeline([self, other])
 
     async def _process_return(self, data, loop):
