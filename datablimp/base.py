@@ -5,7 +5,12 @@ from types import GeneratorType
 from uuid import uuid4
 
 
-class Base(object):
+class base_meta(type):
+    def __or__(cls, other):
+        return Pipeline([cls(), other()])
+
+
+class Base(metaclass=base_meta):
 
     process_method_name = None
 
