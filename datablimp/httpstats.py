@@ -9,7 +9,7 @@ from datablimp import E
 apache_combined = re.compile(
     '(?P<clientip>[\d\.]+) (?P<ident>\S+) (?P<auth>\S+) '
     '\[(?P<timestamp>.*?)\] '
-    '"(?P<verb>\S+) (?P<path>.*) HTTP/(?P<httpversion>\d\.\d)" '
+    '"(?P<method>\S+) (?P<path>.*) HTTP/(?P<httpversion>\d\.\d)" '
     '(?P<status_code>\d+|-) (?P<bytes>\d+|-)'
     '( "(?P<referrer>.*?)")?'
     '( "(?P<agent>.*)")?'

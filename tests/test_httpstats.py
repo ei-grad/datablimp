@@ -18,7 +18,7 @@ async def test_apache_combined():
     await pipeline.run([open(ACCESS_LOG).readline()])
     assert output == [{
         'httpversion': '1.1',
-        'verb': 'GET',
+        'method': 'GET',
         'bytes': 17801,
         'status_code': 200,
         'ident': '-',
