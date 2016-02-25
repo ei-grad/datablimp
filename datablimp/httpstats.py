@@ -18,6 +18,9 @@ apache_combined = re.compile(
 
 
 class ApacheCombined(E.Base):
+
+    datefmt = '%d/%b/%Y:%H:%M:%S %z'
+
     def extract(self, line):
         m = apache_combined.match(line)
         if m is None:
@@ -32,7 +35,7 @@ class ApacheCombined(E.Base):
         ret['status_code'] = int(ret['status_code'])
         ret['timestamp'] = datetime.strptime(
             ret['timestamp'],
-            '%d/%b/%Y:%H:%M:%S %z'
+            self.datefmt
         )
         return ret
 
