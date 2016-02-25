@@ -1,3 +1,4 @@
+from datetime import datetime, timezone, timedelta
 import os
 import pytest
 
@@ -18,11 +19,12 @@ async def test_apache_combined():
     assert output == [{
         'httpversion': '1.1',
         'verb': 'GET',
-        'bytes': '17801',
-        'response': '200',
+        'bytes': 17801,
+        'status_code': 200,
         'ident': '-',
+        'path': '/items/13/th300/345206.jpg',
         'referrer': '-',
-        'timestamp': '25/Feb/2016:02:17:01 +0300',
+        'timestamp': datetime(2016, 2, 25, 2, 17, 1, tzinfo=timezone(timedelta(0, 10800))),
         'clientip': '195.16.110.191',
         'agent': 'okhttp/2.6.0',
         'auth': '-'
