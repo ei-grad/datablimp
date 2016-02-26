@@ -6,14 +6,15 @@ import re
 from datablimp import E
 
 
+# request_uri, http_version and status_code - field names used in RFC2616
 apache_combined = re.compile(
     '(?P<clientip>[\d\.]+) (?P<ident>\S+) (?P<auth>\S+) '
     '\[(?P<timestamp>.*?)\] '
-    '"(?P<method>\S+) (?P<path>.*) HTTP/(?P<httpversion>\d\.\d)" '
+    '"(?P<method>\S+) (?P<request_uri>.*) HTTP/(?P<http_version>\d\.\d)" '
     '(?P<status_code>\d+|-) (?P<bytes>\d+|-)'
     '( "(?P<referrer>.*?)")?'
     '( "(?P<agent>.*)")?'
-    '( "(?P<kv>([a-z_]+)="(.*)"))*'
+    '( (?P<kv>.*))?'
 )
 
 
