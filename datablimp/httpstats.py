@@ -41,5 +41,12 @@ class ApacheCombined(E.Base):
 
 
 class HTTPStats(E.Base):
+
+    def __init__(self, class_thresholds=[0.05, 0.25, 0.5, 2.5],
+                 percentiles=[50, 75, 90, 95, 99],
+                 interval='1s'):
+        self.class_thresholds = class_thresholds
+        self.percentiles = percentiles
+
     def extract(self, value):
         pass
