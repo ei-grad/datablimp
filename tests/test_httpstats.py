@@ -36,3 +36,16 @@ async def test_httpstats():
     output = []
     pipeline = HTTPStats | L.AppendTo(output)
     await pipeline.run(RECORDS)
+    assert output == [{
+        'timestamp': datetime(2016, 2, 25, 2, 17, 1, tzinfo=timezone(timedelta(0, 10800))),
+        'interval': 10.,
+        'rps_min': 1.,
+        'rps_max': 10.,
+        'rps_avg': 2.,
+        'count_total': 100,
+        'count_slow': 20,
+        'count_fast': 80,
+        'p_95': 5.0,
+        'p_85': 1.0,
+        'p_50': 0.5,
+    }]

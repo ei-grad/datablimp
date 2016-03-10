@@ -43,11 +43,33 @@ class ApacheCombined(E.Base):
 
 class HTTPStats(E.Base):
 
-    def __init__(self, class_thresholds=[0.05, 0.25, 0.5, 2.5],
+    def __init__(self,
+                 class_thresholds=[0.05, 0.25, 0.5, 2.5],
+                 class_labels=['immediate', 'fast', 'normal', 'slow',
+                               'very_slow'],
                  percentiles=[50, 75, 90, 95, 99],
                  interval='1s'):
         self.class_thresholds = class_thresholds
         self.percentiles = percentiles
+        self.interval = interval_to_seconds(interval)
+        self.ret = None
 
     def extract(self, value):
-        pass
+        ret = self.ret
+        timestamp = self.round_to_interval(value['timestamp'])
+        if timestamp != ret['timestamp']:
+            self.flush()
+            self.ret = ret = {
+                'timestamp': timestamp,
+                'interval': self.interval
+            }
+        ret['count_total'] += 1
+        if 'request_time' in value:
+            # XXX: implement class/percentiles
+            pass
+        self.ret['code_%d' % value['status_code']] += 1
+
+    def flush(self):
+        if self.ret is not None:
+            ret, self.ret = self.ret, None
+            self.emit(ret)
